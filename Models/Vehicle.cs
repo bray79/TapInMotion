@@ -28,5 +28,5 @@ public class Vehicle
     public virtual Station PrevisionStation {get;set;} = default!;
     public int? CurrentStationID {get; set;}
     public virtual Station? CurrentStation {get;set;}
-    public virtual ICollection<Trip> TripHistory {get;set;} = default!;
+    public virtual ICollection<Trip> TripHistory {get;set;} = new List<Trip>();
 }

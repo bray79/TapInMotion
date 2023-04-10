@@ -33,5 +33,5 @@ public class Station
     [Column(TypeName = "decimal(8,5)")]
     public decimal Latitude { get; set; }
     [InverseProperty("CurrentStation")]
-    public virtual ICollection<Vehicle> AvailableVehicles { get; set; } = default!; //= new List<Vehicle>();
+    public virtual ICollection<Vehicle> AvailableVehicles { get; set; } =  new List<Vehicle>();
 }

@@ -25,5 +25,5 @@ public class Student
     public DateTime StartDate { get; set; } = DateTime.Now;
     public string? Major { get; set; }
     public string? Minor { get; set; }
-    public virtual ICollection<Trip> Trips { get; set; } = default!;
+    public virtual ICollection<Trip> Trips { get; set; } = new List<Trip>();
 }
