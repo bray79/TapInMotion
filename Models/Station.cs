@@ -11,7 +11,7 @@ public class Station
     public int SchoolID { get; set; }
 
     [JsonIgnore]
-    public virtual School School { get; set; } = default!;
+    public virtual School? School { get; set; } 
     public string? Name { get; set; }
 
     [Display(Name = "Bike Capacity")]
