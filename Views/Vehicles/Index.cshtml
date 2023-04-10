@@ -25,7 +25,7 @@
                 @Html.DisplayNameFor(model => model.Latitude)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PreviousStationID)
+                @Html.DisplayNameFor(model => model.PreviousStation)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CurrentStation)
@@ -37,7 +37,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.School.Alias)
+                @Html.DisplayFor(modelItem => item.School!.Alias)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Type)
@@ -49,10 +49,10 @@
                 @Html.DisplayFor(modelItem => item.Latitude)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PreviousStationID)
+                @Html.DisplayFor(modelItem => item.PreviousStation!.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CurrentStation.StationID)
+                @Html.DisplayFor(modelItem => item.CurrentStation!.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.VehicleID">Edit</a> |

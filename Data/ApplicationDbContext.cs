@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TapInMotion.Models;
 
 namespace TapInMotion.Data;
 
@@ -18,4 +19,5 @@ public class ApplicationDbContext : IdentityDbContext
 
     public DbSet<TapInMotion.Models.Station> Trip { get; set; } = default!;
     public DbSet<TapInMotion.Models.Administrator> Administrator { get; set; } = default!;
+    public DbSet<TapInMotion.Models.Trip> Trip_1 { get; set; } = default!;
 }

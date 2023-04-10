@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TapInMotion.Data;
 
@@ -10,9 +11,11 @@ using TapInMotion.Data;
 namespace TapInMotion.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230410060510_TripDetails")]
+    partial class TripDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
@@ -400,6 +403,9 @@ namespace TapInMotion.Data.Migrations
                     b.Property<int>("PreviousStationID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("PrevisionStationStationID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("SchoolID")
                         .HasColumnType("INTEGER");
 
@@ -410,7 +416,7 @@ namespace TapInMotion.Data.Migrations
 
                     b.HasIndex("CurrentStationID");
 
-                    b.HasIndex("PreviousStationID");
+                    b.HasIndex("PrevisionStationStationID");
 
                     b.HasIndex("SchoolID");
 
@@ -558,11 +564,9 @@ namespace TapInMotion.Data.Migrations
                         .WithMany("AvailableVehicles")
                         .HasForeignKey("CurrentStationID");
 
-                    b.HasOne("TapInMotion.Models.Station", "PreviousStation")
+                    b.HasOne("TapInMotion.Models.Station", "PrevisionStation")
                         .WithMany()
-                        .HasForeignKey("PreviousStationID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PrevisionStationStationID");
 
                     b.HasOne("TapInMotion.Models.School", "School")
                         .WithMany("Vehicles")
@@ -572,7 +576,7 @@ namespace TapInMotion.Data.Migrations
 
                     b.Navigation("CurrentStation");
 
-                    b.Navigation("PreviousStation");
+                    b.Navigation("PrevisionStation");
 
                     b.Navigation("School");
                 });
