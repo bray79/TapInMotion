@@ -14,6 +14,23 @@ namespace TapInMotion.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        private void PopulateDropdowns()
+        {
+            ViewData["SchoolID"] = new SelectList(_context.School, "SchoolID", "Name");
+            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Email");
+        }
+
+        private void PopulateDropdowns(Student? student)
+        {
+            ViewData["SchoolID"] = new SelectList(
+                _context.School,
+                "SchoolID",
+                "Name",
+                student?.SchoolID
+            );
+            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Email", student?.UserID);
+        }
+
         public StudentsController(ApplicationDbContext context)
         {
             _context = context;
@@ -49,8 +66,9 @@ namespace TapInMotion.Controllers
         // GET: Students/Create
         public IActionResult Create()
         {
-            ViewData["SchoolID"] = new SelectList(_context.School, "SchoolID", "Alias");
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id");
+            PopulateDropdowns();
+            //ViewData["SchoolID"] = new SelectList(_context.School, "SchoolID", "Alias");
+            // ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -59,7 +77,10 @@ namespace TapInMotion.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StudentID,UserID,StudentNumber,SchoolID,Name,StartDate,Major,Minor")] Student student)
+        public async Task<IActionResult> Create(
+            [Bind("StudentID,UserID,StudentNumber,SchoolID,Name,StartDate,Major,Minor")]
+                Student student
+        )
         {
             if (ModelState.IsValid)
             {
@@ -67,8 +88,14 @@ namespace TapInMotion.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SchoolID"] = new SelectList(_context.School, "SchoolID", "Alias", student.SchoolID);
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", student.UserID);
+            /*  ViewData["SchoolID"] = new SelectList(
+                 _context.School,
+                 "SchoolID",
+                 "Alias",
+                 student.SchoolID
+             );
+             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", student.UserID); */
+            PopulateDropdowns(student);
             return View(student);
         }
 
@@ -85,8 +112,14 @@ namespace TapInMotion.Controllers
             {
                 return NotFound();
             }
-            ViewData["SchoolID"] = new SelectList(_context.School, "SchoolID", "Alias", student.SchoolID);
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", student.UserID);
+            PopulateDropdowns(student);
+            // ViewData["SchoolID"] = new SelectList(
+            //     _context.School,
+            //     "SchoolID",
+            //     "Alias",
+            //     student.SchoolID
+            // );
+            // ViewData["UserID"] = new SelectList(_context.Users, "Id", "Email", student.UserID);
             return View(student);
         }
 
@@ -95,7 +128,11 @@ namespace TapInMotion.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StudentID,UserID,StudentNumber,SchoolID,Name,StartDate,Major,Minor")] Student student)
+        public async Task<IActionResult> Edit(
+            int id,
+            [Bind("StudentID,UserID,StudentNumber,SchoolID,Name,StartDate,Major,Minor")]
+                Student student
+        )
         {
             if (id != student.StudentID)
             {
@@ -122,8 +159,14 @@ namespace TapInMotion.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SchoolID"] = new SelectList(_context.School, "SchoolID", "Alias", student.SchoolID);
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", student.UserID);
+            PopulateDropdowns(student);
+            /*           ViewData["SchoolID"] = new SelectList(
+                          _context.School,
+                          "SchoolID",
+                          "Alias",
+                          student.SchoolID
+                      );
+                      ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", student.UserID); */
             return View(student);
         }
 
@@ -161,14 +204,14 @@ namespace TapInMotion.Controllers
             {
                 _context.Student.Remove(student);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool StudentExists(int id)
         {
-          return (_context.Student?.Any(e => e.StudentID == id)).GetValueOrDefault();
+            return (_context.Student?.Any(e => e.StudentID == id)).GetValueOrDefault();
         }
     }
 }
