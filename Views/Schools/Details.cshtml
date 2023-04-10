@@ -66,7 +66,7 @@
             <h4>Stations</h4>
             <ul id="station-list" class="list-group">
 
-                @foreach (var station in @Model?.Stations)
+                @foreach (var station in @Model?.Stations!)
                 {
                     <li data-id="@station.StationID" data-name="@station.Name" data-longitude="@station.Longitude"
                         data-latitude="@station.Latitude" data-bikecapacity="@station.BikeCapacity"
