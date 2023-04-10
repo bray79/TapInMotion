@@ -1,0 +1,151 @@
+CREATE TABLE IF NOT EXISTS "__EFMigrationsHistory" (
+    "MigrationId" TEXT NOT NULL CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY,
+    "ProductVersion" TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "AspNetRoles" (
+    "Id" TEXT NOT NULL CONSTRAINT "PK_AspNetRoles" PRIMARY KEY,
+    "ConcurrencyStamp" TEXT,
+    "Name" TEXT,
+    "NormalizedName" TEXT
+);
+CREATE TABLE IF NOT EXISTS "AspNetUserTokens" (
+    "UserId" TEXT NOT NULL,
+    "LoginProvider" TEXT NOT NULL,
+    "Name" TEXT NOT NULL,
+    "Value" TEXT,
+    CONSTRAINT "PK_AspNetUserTokens" PRIMARY KEY ("UserId", "LoginProvider", "Name")
+);
+CREATE TABLE IF NOT EXISTS "AspNetUsers" (
+    "Id" TEXT NOT NULL CONSTRAINT "PK_AspNetUsers" PRIMARY KEY,
+    "AccessFailedCount" INTEGER NOT NULL,
+    "ConcurrencyStamp" TEXT,
+    "Email" TEXT,
+    "EmailConfirmed" INTEGER NOT NULL,
+    "LockoutEnabled" INTEGER NOT NULL,
+    "LockoutEnd" TEXT,
+    "NormalizedEmail" TEXT,
+    "NormalizedUserName" TEXT,
+    "PasswordHash" TEXT,
+    "PhoneNumber" TEXT,
+    "PhoneNumberConfirmed" INTEGER NOT NULL,
+    "SecurityStamp" TEXT,
+    "TwoFactorEnabled" INTEGER NOT NULL,
+    "UserName" TEXT
+);
+CREATE TABLE IF NOT EXISTS "AspNetRoleClaims" (
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_AspNetRoleClaims" PRIMARY KEY AUTOINCREMENT,
+    "ClaimType" TEXT,
+    "ClaimValue" TEXT,
+    "RoleId" TEXT NOT NULL,
+    CONSTRAINT "FK_AspNetRoleClaims_AspNetRoles_RoleId" FOREIGN KEY ("RoleId") REFERENCES "AspNetRoles" ("Id") ON DELETE CASCADE
+);
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE IF NOT EXISTS "AspNetUserClaims" (
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_AspNetUserClaims" PRIMARY KEY AUTOINCREMENT,
+    "ClaimType" TEXT,
+    "ClaimValue" TEXT,
+    "UserId" TEXT NOT NULL,
+    CONSTRAINT "FK_AspNetUserClaims_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "AspNetUserLogins" (
+    "LoginProvider" TEXT NOT NULL,
+    "ProviderKey" TEXT NOT NULL,
+    "ProviderDisplayName" TEXT,
+    "UserId" TEXT NOT NULL,
+    CONSTRAINT "PK_AspNetUserLogins" PRIMARY KEY ("LoginProvider", "ProviderKey"),
+    CONSTRAINT "FK_AspNetUserLogins_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "AspNetUserRoles" (
+    "UserId" TEXT NOT NULL,
+    "RoleId" TEXT NOT NULL,
+    CONSTRAINT "PK_AspNetUserRoles" PRIMARY KEY ("UserId", "RoleId"),
+    CONSTRAINT "FK_AspNetUserRoles_AspNetRoles_RoleId" FOREIGN KEY ("RoleId") REFERENCES "AspNetRoles" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_AspNetUserRoles_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE
+);
+CREATE INDEX "RoleNameIndex" ON "AspNetRoles" ("NormalizedName");
+CREATE INDEX "IX_AspNetRoleClaims_RoleId" ON "AspNetRoleClaims" ("RoleId");
+CREATE INDEX "IX_AspNetUserClaims_UserId" ON "AspNetUserClaims" ("UserId");
+CREATE INDEX "IX_AspNetUserLogins_UserId" ON "AspNetUserLogins" ("UserId");
+CREATE INDEX "IX_AspNetUserRoles_RoleId" ON "AspNetUserRoles" ("RoleId");
+CREATE INDEX "IX_AspNetUserRoles_UserId" ON "AspNetUserRoles" ("UserId");
+CREATE INDEX "EmailIndex" ON "AspNetUsers" ("NormalizedEmail");
+CREATE UNIQUE INDEX "UserNameIndex" ON "AspNetUsers" ("NormalizedUserName");
+CREATE TABLE IF NOT EXISTS "School" (
+    "SchoolID" INTEGER NOT NULL CONSTRAINT "PK_School" PRIMARY KEY AUTOINCREMENT,
+    "Longitude" decimal(8,5) NOT NULL,
+    "Latitude" decimal(8,5) NOT NULL,
+    "MapZoom" INTEGER NOT NULL,
+    "Alias" TEXT NOT NULL,
+    "Name" TEXT NOT NULL,
+    "State" TEXT NULL,
+    "City" TEXT NULL
+);
+CREATE TABLE IF NOT EXISTS "Administrator" (
+    "AdministratorID" INTEGER NOT NULL CONSTRAINT "PK_Administrator" PRIMARY KEY AUTOINCREMENT,
+    "SchoolID" INTEGER NOT NULL,
+    "Name" TEXT NULL,
+    "StartDate" TEXT NOT NULL,
+    CONSTRAINT "FK_Administrator_School_SchoolID" FOREIGN KEY ("SchoolID") REFERENCES "School" ("SchoolID") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "Station" (
+    "StationID" INTEGER NOT NULL CONSTRAINT "PK_Station" PRIMARY KEY AUTOINCREMENT,
+    "SchoolID" INTEGER NOT NULL,
+    "Name" TEXT NULL,
+    "BikeCapacity" INTEGER NOT NULL,
+    "ScooterCapacity" INTEGER NOT NULL,
+    "SkateboardCapacity" INTEGER NOT NULL,
+    "Longitude" decimal(8,5) NOT NULL,
+    "Latitude" decimal(8,5) NOT NULL,
+    CONSTRAINT "FK_Station_School_SchoolID" FOREIGN KEY ("SchoolID") REFERENCES "School" ("SchoolID") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "Student" (
+    "StudentID" INTEGER NOT NULL CONSTRAINT "PK_Student" PRIMARY KEY AUTOINCREMENT,
+    "UserID" TEXT NOT NULL,
+    "StudentNumber" INTEGER NOT NULL,
+    "SchoolID" INTEGER NOT NULL,
+    "Name" TEXT NULL,
+    "StartDate" TEXT NOT NULL,
+    "Major" TEXT NULL,
+    "Minor" TEXT NULL,
+    CONSTRAINT "FK_Student_AspNetUsers_UserID" FOREIGN KEY ("UserID") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_Student_School_SchoolID" FOREIGN KEY ("SchoolID") REFERENCES "School" ("SchoolID") ON DELETE CASCADE
+);
+CREATE INDEX "IX_Administrator_SchoolID" ON "Administrator" ("SchoolID");
+CREATE INDEX "IX_Station_SchoolID" ON "Station" ("SchoolID");
+CREATE INDEX "IX_Student_SchoolID" ON "Student" ("SchoolID");
+CREATE INDEX "IX_Student_UserID" ON "Student" ("UserID");
+CREATE TABLE IF NOT EXISTS "Trip_1" (
+    "TripID" INTEGER NOT NULL CONSTRAINT "PK_Trip_1" PRIMARY KEY AUTOINCREMENT,
+    "EndStationID" INTEGER NOT NULL,
+    "EndTime" TEXT NOT NULL,
+    "SchoolID" INTEGER NOT NULL,
+    "StartStationID" INTEGER NOT NULL,
+    "StartTime" TEXT NOT NULL,
+    "StudentID" INTEGER NOT NULL,
+    "VehicleID" INTEGER NOT NULL,
+    CONSTRAINT "FK_Trip_1_School_SchoolID" FOREIGN KEY ("SchoolID") REFERENCES "School" ("SchoolID") ON DELETE CASCADE,
+    CONSTRAINT "FK_Trip_1_Station_EndStationID" FOREIGN KEY ("EndStationID") REFERENCES "Station" ("StationID") ON DELETE CASCADE,
+    CONSTRAINT "FK_Trip_1_Station_StartStationID" FOREIGN KEY ("StartStationID") REFERENCES "Station" ("StationID") ON DELETE CASCADE,
+    CONSTRAINT "FK_Trip_1_Student_StudentID" FOREIGN KEY ("StudentID") REFERENCES "Student" ("StudentID") ON DELETE CASCADE,
+    CONSTRAINT "FK_Trip_1_Vehicle_VehicleID" FOREIGN KEY ("VehicleID") REFERENCES "Vehicle" ("VehicleID") ON DELETE CASCADE
+);
+CREATE INDEX "IX_Trip_1_EndStationID" ON "Trip_1" ("EndStationID");
+CREATE INDEX "IX_Trip_1_SchoolID" ON "Trip_1" ("SchoolID");
+CREATE INDEX "IX_Trip_1_StartStationID" ON "Trip_1" ("StartStationID");
+CREATE INDEX "IX_Trip_1_StudentID" ON "Trip_1" ("StudentID");
+CREATE INDEX "IX_Trip_1_VehicleID" ON "Trip_1" ("VehicleID");
+CREATE TABLE IF NOT EXISTS "Vehicle" (
+    "VehicleID" INTEGER NOT NULL CONSTRAINT "PK_Vehicle" PRIMARY KEY AUTOINCREMENT,
+    "CurrentStationID" INTEGER NULL,
+    "Latitude" decimal(8,5) NOT NULL,
+    "Longitude" decimal(8,5) NOT NULL,
+    "PreviousStationID" INTEGER NOT NULL,
+    "SchoolID" INTEGER NOT NULL,
+    "Type" INTEGER NOT NULL,
+    CONSTRAINT "FK_Vehicle_School_SchoolID" FOREIGN KEY ("SchoolID") REFERENCES "School" ("SchoolID") ON DELETE CASCADE,
+    CONSTRAINT "FK_Vehicle_Station_CurrentStationID" FOREIGN KEY ("CurrentStationID") REFERENCES "Station" ("StationID"),
+    CONSTRAINT "FK_Vehicle_Station_PreviousStationID" FOREIGN KEY ("PreviousStationID") REFERENCES "Station" ("StationID") ON DELETE CASCADE
+);
+CREATE INDEX "IX_Vehicle_CurrentStationID" ON "Vehicle" ("CurrentStationID");
+CREATE INDEX "IX_Vehicle_PreviousStationID" ON "Vehicle" ("PreviousStationID");
+CREATE INDEX "IX_Vehicle_SchoolID" ON "Vehicle" ("SchoolID");

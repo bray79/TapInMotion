@@ -36,6 +36,8 @@ namespace TapInMotion.Controllers
             }
 
             var school = await _context.School
+            .Include(s => s.Stations)
+            .Include(s => s.Vehicles)
                 .FirstOrDefaultAsync(m => m.SchoolID == id);
             if (school == null)
             {
