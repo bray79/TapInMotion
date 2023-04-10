@@ -10,15 +10,15 @@ public class Student
 {
     public int StudentID { get; set; }
     [Required]
-    public string UserID { get; set; } = default!;
-    public virtual IdentityUser User { get; set; } = default!;
+    public string? UserID { get; set; }
+    public virtual IdentityUser? User { get; set; } 
 
 
     public int StudentNumber {get;set;}
     [Required]
     // [ForeignKey("School")]
     public int SchoolID { get; set; }
-    public virtual School School { get; set; } = default!;
+    public virtual School? School { get; set; }
     public string? Name { get; set; }
 
     [DataType(DataType.Date)]
